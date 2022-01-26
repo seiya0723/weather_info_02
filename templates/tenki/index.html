@@ -1,0 +1,116 @@
+{% load param_change %}
+{# ↑テンプレートタグを読み込んで使う。 #}
+
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>今日と明日の天気</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+</head>
+<body>
+
+    <h1 class="bg-primary text-white text-center">今日と明日の天気</h1>
+
+    <main class="container">
+
+
+        <h2>新着の天気データ</h2>
+
+        <table class="table table-striped text-center">
+            <thead class="thead-dark">
+                <tr>
+                    <th>場所</th>
+                    <th>時刻</th>
+                    <th>今日の天気</th>
+                    <th>今日の最高気温</th>
+                    <th>今日の最低気温</th>
+                    <th>明日の天気</th>
+                    <th>明日の最高気温</th>
+                    <th>明日の最低気温</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for weather in weathers %}
+                <tr>
+                    <td>{{ weather.place                }}</td>
+                    <td>{{ weather.dt                   }}</td>
+                    <td>{{ weather.today                }}</td>
+                    <td>{{ weather.today_high_temp      }}℃</td>
+                    <td>{{ weather.today_low_temp       }}℃</td>
+                    <td>{{ weather.tomorrow             }}</td>
+                    <td>{{ weather.tomorrow_low_temp    }}℃</td>
+                    <td>{{ weather.tomorrow_high_temp   }}℃</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+
+        <h2>過去の天気データ</h2>
+
+        <form action="" method="GET">
+            <select name="year">
+                <option value="">--年</option>
+                {% for year in years %}
+                <option value="{{ year }}">{{ year }}年</option>
+                {% endfor %}
+            </select>
+            <select name="month">
+                <option value="">--月</option>
+                {% for month in months %}
+                <option value="{{ month }}">{{ month }}月</option>
+                {% endfor %}
+            </select>
+            <input type="submit" value="検索">
+        </form>
+
+        <table class="table table-striped text-center">
+            <thead class="thead-dark">
+                <tr>
+                    <th>場所</th>
+                    <th>時刻</th>
+                    <th>今日の天気</th>
+                    <th>今日の最高気温</th>
+                    <th>今日の最低気温</th>
+                    <th>明日の天気</th>
+                    <th>明日の最高気温</th>
+                    <th>明日の最低気温</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for weather in all_weathers %}
+                <tr>
+                    <td>{{ weather.place                }}</td>
+                    <td>{{ weather.dt                   }}</td>
+                    <td>{{ weather.today                }}</td>
+                    <td>{{ weather.today_high_temp      }}℃</td>
+                    <td>{{ weather.today_low_temp       }}℃</td>
+                    <td>{{ weather.tomorrow             }}</td>
+                    <td>{{ weather.tomorrow_low_temp    }}℃</td>
+                    <td>{{ weather.tomorrow_high_temp   }}℃</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <ul class="pagination">
+            {% if all_weathers.has_previous %}
+            <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' all_weathers.previous_page_number %}">Prev</a></li>
+            {% endif %}
+            <li class="page-item"><span class="page-link">{{ all_weathers.number }}</span></li>
+            {% if all_weathers.has_next %}
+            <li class="page-item"><a class="page-link" href="?{% url_replace request 'page' all_weathers.next_page_number %}">Next</a></li>
+            {% endif %}
+        </ul>
+
+
+    </main>
+
+</body>
+</html>
+
